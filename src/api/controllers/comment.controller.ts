@@ -1,6 +1,29 @@
 import { Request, Response } from "express";
 import Comment from "../../models/comment.model";
 
+// Trae todos los comentarios creados por un usuario
+export const getUserComments = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const comments = await Comment.find({ idUsuario: id });
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).send("Error al traer los comentarios");
+  }
+};
+
+// Trae todos los comentarios de unas publicidad
+export const getPostComments = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const comments = await Comment.find({ idPost: id });
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).send("Error al traer los comentarios");
+  }
+};
+
+// Trae todos los comentarios
 export const getComments = async (req: Request, res: Response) => {
   try {
     const comments = await Comment.find();
@@ -10,10 +33,11 @@ export const getComments = async (req: Request, res: Response) => {
   }
 };
 
+// Crea un comentario
 export const createComment = async (req: Request, res: Response) => {
   try {
-    const { idPost, comentario } = req.body;
-    const comment = new Comment({ idPost, comentario });
+    const { idUser, idPost, comentario } = req.body;
+    const comment = new Comment({ idUser, idPost, comentario });
     await comment.save();
     res.status(201).json(comment);
   } catch (error) {
@@ -21,6 +45,7 @@ export const createComment = async (req: Request, res: Response) => {
   }
 };  
 
+// Trae un comentario
 export const getComment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -31,6 +56,7 @@ export const getComment = async (req: Request, res: Response) => {
   }
 };
 
+// Actualiza un comentario
 export const updateComment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -42,6 +68,7 @@ export const updateComment = async (req: Request, res: Response) => {
   }
 };
 
+// Elimina un comentario
 export const deleteComment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
